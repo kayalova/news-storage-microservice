@@ -2,3 +2,6 @@ tsc --init - to create tsc config file
 2. install eslint and create config with npx eslint init command. use npx eslint --help for ...help )
 (You can also run this command directly using 'npm init @eslint/config'.)
 3. choose technologies - postgres, rabbitmq, express
+
+----
+tsc in terminal compile ts to js using tsconfig.json 

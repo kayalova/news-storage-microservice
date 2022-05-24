@@ -1,9 +1,7 @@
-/* 
 class NewsApiMicroservice {
-    constructor() {}
+    constructor() { }
 
-    getNews(req) {
-        kafkaProducer.send('newsCore', {req})
-    }
+    // getNews(req) {
+    //     kafkaProducer.send('newsCore', {req})
+    // }
 }
-*/

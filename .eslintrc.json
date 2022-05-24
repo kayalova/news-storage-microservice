@@ -15,5 +15,25 @@
     "plugins": [
         "@typescript-eslint"
     ],
-    "rules": {}
+    "rules": {
+        "indent": [
+            2,
+            "tab"
+        ],
+        "space-before-function-paren": [
+            "error",
+            "never"
+        ],
+        "quotes": "off",
+        "@typescript-eslint/quotes": [
+            "error",
+            "single",
+            {
+                "allowTemplateLiterals": true
+            }
+        ],
+        "@typescript-eslint/no-inferrable-types": "off"
+        // "space-before-function-paren": "off",
+        // "@typescript-eslint/space-before-function-paren": ["error"]
+    }
 }
