@@ -20,3 +20,10 @@ process.on('SIGINT', () => {
     // this is only called on ctrl+c, not restart
     process.kill(process.pid, 'SIGINT');
 });
+
+process.on('SIGTERM', () => {
+    // server
+    // server() => {
+    //   console.log('Process terminated');
+    // });
+});

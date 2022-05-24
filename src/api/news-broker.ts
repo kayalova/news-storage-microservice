@@ -1,11 +1,14 @@
 import { Router, Request, Response } from 'express'
+import { NewsService } from './news-microservice'
 
 export default class NewsControllers {
     public router: Router;
+    public newsService: NewsService
 
     constructor() {
         this.router = Router()
         this.routes();
+        this.newsService = new NewsService()
     }
 
     public get = async (req: Request, res: Response) => {
@@ -16,6 +19,7 @@ export default class NewsControllers {
             res.send(response)
         })
         */
+        this.newsService.getNews() // !!!!!!!!!!
         res
             .status(200)
             .send({
