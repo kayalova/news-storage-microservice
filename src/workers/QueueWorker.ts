@@ -1,6 +1,6 @@
 import amqp from 'amqplib'
 
-export class QueueWorker {
+export default class QueueWorker {
     connection: amqp.Connection | undefined
     channel: amqp.Channel | undefined
     msgOptions: amqp.Options.Publish | {}
@@ -15,6 +15,7 @@ export class QueueWorker {
         try {
             this.connection = await amqp.connect(process.env.RABBITMQ_HOST as string)
             this.channel = await this.connection.createChannel()
+            console.log('Successfully connected to rabbitmq')
 
         } catch (error) {
             console.error(`Rabbitmq error: ${error}`)

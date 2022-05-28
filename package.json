@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "buid": "tsc",
+        "build": "tsc",
         "dev": "nodemon src/app.ts",
         "eslint-fix": "npx eslint ./src/**/*.ts --fix"
     },

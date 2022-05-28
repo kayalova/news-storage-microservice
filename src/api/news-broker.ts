@@ -1,14 +1,17 @@
 import { Router, Request, Response } from 'express'
+import QueueWorker from '../workers/QueueWorker';
 import { NewsService } from './news-microservice'
 
 export default class NewsControllers {
     public router: Router;
     public newsService: NewsService
+    private queue: QueueWorker
 
-    constructor() {
+    constructor(queue: QueueWorker) {
         this.router = Router()
         this.routes();
-        this.newsService = new NewsService()
+        this.newsService = new NewsService(queue)
+        this.queue = queue
     }
 
     public get = async (req: Request, res: Response) => {
@@ -19,13 +22,14 @@ export default class NewsControllers {
             res.send(response)
         })
         */
-        this.newsService.getNews() // !!!!!!!!!!
-        res
-            .status(200)
-            .send({
-                request: { path: req.path },
-                response: { news: 'news' }
-            })
+        const a = this.newsService.getNews() // !!!!!!!!!!
+        console.log("a is ", a)
+        // res
+        //     .status(200)
+        //     .send({
+        //         request: { path: req.path },
+        //         response: { news: 'news' }
+        //     })
     }
 
     public update = async (req: Request, res: Response) => {

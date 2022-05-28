@@ -1,14 +1,31 @@
-import express from 'express'
-const app = express()
-// import routes from './src/api/news-broker'
 import 'dotenv/config'
 import Server from './api/Server'
+import QueueWorker from './workers/QueueWorker'
+import NewsControllers from './api/news-broker'
 
 
-const server = new Server();
-server.start()
-server.routes()
+(async () => {
+    const queueWorker = new QueueWorker()
+    await queueWorker.init()
 
+
+    const newsRouter = new NewsControllers(queueWorker).router
+
+    const server = new Server(newsRouter, 'api/news');
+    server.start()
+
+})()
+
+/* 
+Server -> Controllers -> Service -> Queworker
+
+Service use queueworker, it needs it
+what ways to get it:
+1
+
+
+
+*/
 
 
 // вынести
