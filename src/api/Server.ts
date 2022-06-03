@@ -1,17 +1,22 @@
 import express, { Router } from 'express'
+import QueueWorker from '../workers/QueueWorker'
+import NewsControllers from './news-broker'
 
 export default class Server {
     private app: express.Application
+    public newsController: NewsControllers
 
-    constructor(router: Router, api: string) {
+    constructor(queueWorker: QueueWorker) {
         this.app = express()
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }))
+        this.newsController = new NewsControllers(queueWorker)
         this.configuration()
-        this.app._router = router
-        this.app.use(api, router)
+        this.routes()
+    }
 
-        console.log(this.app._router.stack)
+    public routes() {
+        this.app.use('/api/news', this.newsController.router)
     }
 
     public configuration() {
@@ -24,5 +29,4 @@ export default class Server {
             console.log(`Server is running on port ${PORT}`)
         })
     }
-
 }

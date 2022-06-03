@@ -32,11 +32,29 @@ export default class QueueWorker {
     }
 
     async sendMessage(queue: string, msg: any) {
+        console.log(`Going to send a message to queue ${queue}`)
         if (!this.channel) {
             await this.getChannel()
         }
 
-        this.channel!.sendToQueue(queue, msg, this.msgOptions)
+        await this.channel!.assertQueue(queue)
+        await this.channel!.sendToQueue(queue, Buffer.from(msg), this.msgOptions) // нужно ли прописывать здесь await, помню что после return не нужно
+        console.log(`Message was sended to queue ${queue}`)
+    }
 
+    async consumeMessage(queue: string, handler: Function) {
+        if (!this.channel) {
+            await this.getChannel()
+        }
+
+        await this.channel!.assertQueue(queue)
+        console.log(`Listening to ${queue}`)
+        this.channel!.consume(queue, async (data: any) => {
+            const msg = JSON.parse(data?.content.toString())
+            console.log(`${queue} receive message: ${JSON.stringify(msg)}`)
+
+            await handler(data)
+            this.channel!.ack(data)
+        })
     }
 }
