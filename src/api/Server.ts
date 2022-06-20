@@ -1,16 +1,16 @@
 import express, { Router } from 'express'
 import QueueWorker from '../workers/QueueWorker'
-import NewsControllers from './news-broker'
+import NewsControllers from './news.controller'
 
 export default class Server {
     private app: express.Application
     public newsController: NewsControllers
 
-    constructor(queueWorker: QueueWorker) {
+    constructor(queueworker: QueueWorker) {
         this.app = express()
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }))
-        this.newsController = new NewsControllers(queueWorker)
+        this.newsController = new NewsControllers(queueworker)
         this.configuration()
         this.routes()
     }

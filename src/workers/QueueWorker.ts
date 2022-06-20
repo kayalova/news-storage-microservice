@@ -1,7 +1,7 @@
 import amqp from 'amqplib'
 
 export default class QueueWorker {
-    connection: amqp.Connection | undefined
+    connection: amqp.Connection | undefined // как можно избавиться от undefined
     channel: amqp.Channel | undefined
     msgOptions: amqp.Options.Publish | {}
 
@@ -16,6 +16,8 @@ export default class QueueWorker {
             this.connection = await amqp.connect(process.env.RABBITMQ_HOST as string)
             this.channel = await this.connection.createChannel()
             console.log('Successfully connected to rabbitmq')
+
+            this.channel.nackAll()
 
         } catch (error) {
             console.error(`Rabbitmq error: ${error}`)
@@ -32,13 +34,12 @@ export default class QueueWorker {
     }
 
     async sendMessage(queue: string, msg: any) {
-        console.log(`Going to send a message to queue ${queue}`)
         if (!this.channel) {
             await this.getChannel()
         }
 
-        await this.channel!.assertQueue(queue)
-        await this.channel!.sendToQueue(queue, Buffer.from(msg), this.msgOptions) // нужно ли прописывать здесь await, помню что после return не нужно
+        // await this.channel!.assertQueue(queue)
+        this.channel!.sendToQueue(queue, Buffer.from(msg), this.msgOptions)
         console.log(`Message was sended to queue ${queue}`)
     }
 
@@ -47,14 +48,16 @@ export default class QueueWorker {
             await this.getChannel()
         }
 
-        await this.channel!.assertQueue(queue)
+        // await this.channel!.assertQueue(queue)
         console.log(`Listening to ${queue}`)
         this.channel!.consume(queue, async (data: any) => {
             const msg = JSON.parse(data?.content.toString())
             console.log(`${queue} receive message: ${JSON.stringify(msg)}`)
 
             await handler(data)
-            this.channel!.ack(data)
+        }, {
+            noAck: true
         })
     }
+
 }
