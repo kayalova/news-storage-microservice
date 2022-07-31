@@ -17,7 +17,7 @@ export default class QueueWorker {
             this.channel = await this.connection.createChannel()
             console.log('Successfully connected to rabbitmq')
 
-            this.channel.nackAll()
+            this.channel.nackAll() // уточнить
 
         } catch (error) {
             console.error(`Rabbitmq error: ${error}`)
@@ -38,7 +38,7 @@ export default class QueueWorker {
             await this.getChannel()
         }
 
-        // await this.channel!.assertQueue(queue)
+        // await this.channel!.assertQueue(queue) // оставить
         this.channel!.sendToQueue(queue, Buffer.from(msg), this.msgOptions)
         console.log(`Message was sended to queue ${queue}`)
     }
@@ -48,7 +48,7 @@ export default class QueueWorker {
             await this.getChannel()
         }
 
-        // await this.channel!.assertQueue(queue)
+        await this.channel!.assertQueue(queue)
         console.log(`Listening to ${queue}`)
         this.channel!.consume(queue, async (data: any) => {
             const msg = JSON.parse(data?.content.toString())

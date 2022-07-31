@@ -7,10 +7,14 @@
         "skipLibCheck": true, /* Skip type checking of declaration files. */
         "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
         "outDir": "build",
-        "sourceMap": true // to debug
+        "sourceMap": true, // to debug
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "strictPropertyInitialization": false
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "Server.ts"
     ],
     "exclude": [
         "node_modules",

@@ -1,13 +1,16 @@
 import 'dotenv/config'
-import Server from './api/Server'
+import "reflect-metadata"
+import Server from './Server'
+import { AppdataSource } from './config/db.config'
+
 import QueueWorker from './workers/QueueWorker'
-import NewsService from './services/news.service'
 
 (async () => {
     const queueWorker = new QueueWorker()
     await queueWorker.init()
 
-    const server = new Server(queueWorker);
+    const server = new Server(queueWorker, AppdataSource);
     server.start()
 
 })()
+
