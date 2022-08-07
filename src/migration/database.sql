@@ -20,6 +20,6 @@ INSERT INTO news (header, description, author, views) VALUES
                               "We are doing all we can to recapture Black," said the Minister of Magic, 
                               Cornelius Fudge, this morning, "and we beg the magical community to remain calm."',
      'Daily Prophet',
-     11);
+     21);
 
 

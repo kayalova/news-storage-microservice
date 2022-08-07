@@ -1,7 +1,7 @@
 import amqp from 'amqplib'
 
 export default class QueueWorker {
-    connection: amqp.Connection | undefined // как можно избавиться от undefined
+    connection: amqp.Connection | undefined //TODO: как можно избавиться от undefined
     channel: amqp.Channel | undefined
     msgOptions: amqp.Options.Publish | {}
 
@@ -17,7 +17,7 @@ export default class QueueWorker {
             this.channel = await this.connection.createChannel()
             console.log('Successfully connected to rabbitmq')
 
-            this.channel.nackAll() // уточнить
+            this.channel.nackAll() //TODO: уточнить
 
         } catch (error) {
             console.error(`Rabbitmq error: ${error}`)
@@ -38,7 +38,7 @@ export default class QueueWorker {
             await this.getChannel()
         }
 
-        // await this.channel!.assertQueue(queue) // оставить
+        // await this.channel!.assertQueue(queue) //TODO: оставить
         this.channel!.sendToQueue(queue, Buffer.from(msg), this.msgOptions)
         console.log(`Message was sended to queue ${queue}`)
     }

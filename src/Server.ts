@@ -7,13 +7,11 @@ import { DataSource } from 'typeorm'
 export default class Server {
     private app: express.Application
     public newsController: NewsControllers
-    private appDataSource: DataSource
 
     constructor(queueworker: QueueWorker, appDataSource: DataSource) {
         this.app = express()
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }))
-        this.appDataSource = appDataSource
         this.newsController = new NewsControllers(queueworker, appDataSource)
         this.configuration()
         this.routes()
@@ -29,11 +27,12 @@ export default class Server {
 
     public start() {
         const PORT = this.app.get('port');
-        this.app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`)
-            connection.then(ds => {
+        connection.then(ds => {
+            console.log('Connected to db')
+            this.app.listen(PORT, () => {
+                console.log(`Server is running on port ${PORT}`)
 
-            }).catch(e => console.log(e))
-        })
+            })
+        }).catch(e => console.log(e))
     }
 }

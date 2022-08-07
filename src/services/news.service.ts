@@ -1,5 +1,7 @@
 import amqp from 'amqplib'
-import { DataSource } from 'typeorm';
+import { DataSource, FindOneOptions } from 'typeorm';
+
+import { NewsEntity } from '../entities/News.entity';
 import NewsRepository from '../repository/news.repository';
 import QueueWorker from '../workers/QueueWorker';
 import NewsAnalyticsService from './news_analytics.service';
@@ -17,19 +19,29 @@ export default class NewsService {
     }
 
 
-    async get() {
-        return { meow: 'meow' }
+    async getAll() {
+        return this.repository.getNews()
     }
 
+    async getOne(options: FindOneOptions<NewsEntity>): Promise<NewsEntity | null> {
+        return this.repository.getOne(options)
+    }
+
+
+    // подумать над структурой аргумента
     async updateOne(data: any) {
         try {
-            // await this.repository.updateOnethis.repository
+            await this.repository.update()
             this.report({})
 
         } catch (error) {
 
         }
+    }
 
+
+    async createOne(news: NewsEntity) {
+        return this.repository.createOne(news)
     }
 
 
@@ -38,7 +50,6 @@ export default class NewsService {
     async report(msg: any) {
         await this.queueWorker.sendMessage(process.env.NEWS_ANALYTICS_REQUEST_QUEUE as string, JSON.stringify({ data: msg }))
 
-        // this.queueWorker.consumeMessage(process.env.NEWS_REQUEST_QUEUE as string, this.handleRequest)
         // this.queueWorker.consumeMessage(process.env.NEWS_UPDATE_QUEUE as string, async (data: any) => {
         // const msg = JSON.parse(data?.content.toString())
         // })

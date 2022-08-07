@@ -2,11 +2,11 @@ import { Router, Request, Response, NextFunction } from 'express'
 import QueueWorker from '../workers/QueueWorker';
 import NewsService from '../services/news.service';
 import { DataSource } from 'typeorm';
+import { NewsEntity } from '../entities/News.entity';
 
 export default class NewsControllers {
     public router: Router;
     public newsService: NewsService;
-    private appDataSource: DataSource
 
     constructor(queworker: QueueWorker, appDataSource: DataSource) {
         this.newsService = new NewsService(queworker, appDataSource)
@@ -15,9 +15,10 @@ export default class NewsControllers {
         this.routes()
     }
 
+    // TODO: добавить методу findOptions, реализовать поиск по параметрам
     public get = async (req: Request, res: Response) => {
-        try {
-            const news = await this.newsService.get()
+        try { //TODO: получается 2 try catch
+            const news: Array<NewsEntity> = await this.newsService.getAll()
             res.send({
                 request: { method: req.method, params: req.params },
                 response: news
@@ -27,6 +28,20 @@ export default class NewsControllers {
         }
     }
 
+    // TODO: цеплять вторую таблицу, дополнить получаемый объект второй таблицей
+    public getOne = async (req: Request, res: Response) => {
+        try { //TODO: получается 2 try catch
+            const news: NewsEntity | null = await this.newsService.getOne(req.body.data.options)
+            res.send({
+                request: { method: req.method, params: req.params },
+                response: news
+            })
+        } catch (error) {
+            console.log(`NewsController.get error: ${error}`)
+        }
+    }
+
+    // TODO: добавить обновление объекта в бд по параметрам
     public update = async (req: Request, res: Response) => {
         try {
             const news = await this.newsService.updateOne(req.params.data)
@@ -38,6 +53,8 @@ export default class NewsControllers {
             console.log(`NewsController.update error: ${error}`)
         }
     }
+
+    // TODO: создать роут на создание новости
 
 
     public middlewares() {

@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { NewsEntity } from "../entities/News.entity";
 
 export const AppdataSource = new DataSource({
     type: "postgres",
@@ -8,7 +9,8 @@ export const AppdataSource = new DataSource({
     password: "postgres",
     database: "newsmicroservice",
     synchronize: true,
-    entities: [__dirname + "/entities/*.{js,ts}"],
+    // entities: [__dirname + "/entities/*.{js,ts}"], EntityMetadataNotFoundError: No metadata for "NewsEntity" was found.
+    entities: [NewsEntity],
     subscribers: [],
     migrations: [],
 })
