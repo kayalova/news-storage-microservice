@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm"
-import { AuthorEntity } from "./Author.entity"
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { UserEntity } from "./User.entity"
 
 @Entity({ name: "news" })
 export class NewsEntity {
@@ -14,19 +14,23 @@ export class NewsEntity {
     @Column("text")
     description: string
 
-    @ManyToOne(() => AuthorEntity, (author) => author.news, { cascade: true })
-    author: AuthorEntity
+    @ManyToOne(
+        () => UserEntity,
+    )
+    @JoinColumn({ name: "user_id" })
+    author: UserEntity
 
-    // @Column({
-    //     type: 'date',
-    //     nullable: false,
-    //     default: Date.now()
-    // })
-    // createdat: string
+    @CreateDateColumn({
+        name: "created_at",
+        readonly: true,
+        type: 'timestamp'
+    })
+    createdAt: Date
 
-    @Column({ nullable: false, default: false })
-    isPublished: boolean
-
-    @Column({ type: "int" })
-    views: number
+    @UpdateDateColumn({
+        name: "updated_at",
+        readonly: true,
+        type: 'timestamp'
+    })
+    updatedAt: Date
 }

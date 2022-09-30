@@ -20,28 +20,18 @@ export default class NewsService {
 
 
     async getAll() {
-        return this.repository.getNews()
+
     }
 
-    async getOne(options: FindOneOptions<NewsEntity>): Promise<NewsEntity | null> {
-        return this.repository.getOne(options)
+    async getOne(options: FindOneOptions<NewsEntity>) {
     }
 
 
-    // подумать над структурой аргумента
     async updateOne(data: any) {
-        try {
-            await this.repository.update()
-            this.report({})
 
-        } catch (error) {
-
-        }
     }
-
 
     async createOne(news: NewsEntity) {
-        return this.repository.createOne(news)
     }
 
 
