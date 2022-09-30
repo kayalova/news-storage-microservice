@@ -24,7 +24,7 @@ export default class NewsRouter {
 
 
     public routes() {
-        this.router.get('/news/', this.get)
+        this.router.get('/news', this.get) // /news vs /news/
         // this.router.put('/news/:id', this.update)
     }
 

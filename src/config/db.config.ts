@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 import { RoleEntity, UserEntity, NewsEntity } from "../entities";
 
-export const AppdataSource = new DataSource({
+export const appDataSource = new DataSource({
     type: "postgres",
     host: "localhost",
     port: 5432,
@@ -15,4 +15,4 @@ export const AppdataSource = new DataSource({
     migrations: [],
 })
 
-export const connection = AppdataSource.initialize();
+export const connection = appDataSource.initialize();

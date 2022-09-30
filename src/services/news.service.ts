@@ -11,9 +11,8 @@ export default class NewsService {
     private newsAnalyticsService: NewsAnalyticsService
     private repository: NewsRepository
 
-    constructor(queueWorker: QueueWorker, appDataSource: DataSource) {
+    constructor(queueWorker: QueueWorker, repository: NewsRepository) {
         this.queueWorker = queueWorker
-        this.repository = new NewsRepository(appDataSource)
         this.newsAnalyticsService = new NewsAnalyticsService(queueWorker, this.repository)
         this.newsAnalyticsService.consume()
     }
@@ -33,8 +32,6 @@ export default class NewsService {
 
     async createOne(news: NewsEntity) {
     }
-
-
 
 
     async report(msg: any) {
