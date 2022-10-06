@@ -13,9 +13,9 @@
 3. Написать эндпоинты(newsRouter) для сущности news - create, get, update, delete +
 3.* переименовать news -> article
 
-4. Написать users репозиторий - create
-5. Написать users сервис - createUser
-6. Написать эндпоинты userRouter'a - create
+4. Написать users репозиторий - create +
+5. Написать users сервис - createUser +
+6. Написать эндпоинты userRouter'a - create +
 
 
 check datagrip

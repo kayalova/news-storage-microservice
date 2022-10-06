@@ -1,6 +1,6 @@
 import { NewsEntity } from '../entities/News.entity';
-import { ICreateOptions, IFindOptions, IPagination, UpdateBody } from '../models';
-import NewsRepository from '../repository/news.repository';
+import { INewsCreateOptions, INewsFindOptions, IPagination, UpdateBody } from '../models';
+import NewsRepository from '../repositories/news.repository';
 import QueueWorker from '../workers/QueueWorker';
 import NewsAnalyticsService from './news_analytics.service';
 
@@ -17,7 +17,7 @@ export default class NewsService {
     }
 
 
-    getAll(options: IFindOptions, pagination?: IPagination): Promise<Array<NewsEntity>> {
+    getAll(options: INewsFindOptions, pagination?: IPagination): Promise<Array<NewsEntity>> {
         return this.newsRepository.get(options, pagination)
     }
 
@@ -25,7 +25,7 @@ export default class NewsService {
         return this.newsRepository.getOne(id)
     }
 
-    create(options: ICreateOptions): Promise<NewsEntity> {
+    create(options: INewsCreateOptions): Promise<NewsEntity> {
         return this.newsRepository.create(options)
     }
 

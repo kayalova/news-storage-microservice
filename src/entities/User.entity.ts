@@ -5,7 +5,7 @@ import {
     JoinColumn,
 } from "typeorm"
 
-import { RoleEntity, UserRole } from "./Role.entity"
+import { RoleEntity } from "./Role.entity"
 
 @Entity({ name: "users" })
 export class UserEntity {

@@ -1,4 +1,4 @@
-interface IUpdateQuery {
+interface IUpdateNewsQuery {
     header?: string,
     description?: string
 }
@@ -9,7 +9,7 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
         [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>
     }[Keys]
 
-export type UpdateBody = RequireAtLeastOne<IUpdateQuery, 'header' | 'description'>
+export type UpdateBody = RequireAtLeastOne<IUpdateNewsQuery, 'header' | 'description'>
 export type UpdateQuery = UpdateBody & { id: number }
 
 /* 
@@ -17,7 +17,7 @@ export type UpdateQuery = UpdateBody & { id: number }
 а проверял бы в контроллеое 
 */
 
-export interface IFindOptions {
+export interface INewsFindOptions {
     id?: number,
     header?: string,
     description?: string,
@@ -29,7 +29,7 @@ export interface IPagination { // todo: подумать над нейминго
     take?: number
 }
 
-export interface IGetQuery {
+export interface IGetNewsQuery {
     id?: number,
     header?: string,
     description?: string,
@@ -40,17 +40,17 @@ export interface IGetQuery {
     take?: number,
 };
 
-export interface ICreateOptions {
+export interface INewsCreateOptions {
     header: string,
     description: string,
     author: number
 }
 
-export interface ICreateBody {
+export interface INewsCreateBody {
     header: string,
     description: string,
     authorId: number
 }
 
 
-// export interface IGetOptions extends IFindOptions, IPagination { }
+// export interface IGetOptions extends INewsFindOptions, IPagination { }

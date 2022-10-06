@@ -1,4 +1,4 @@
-import NewsRepository from "../repository/news.repository";
+import NewsRepository from "../repositories/news.repository";
 import QueueWorker from "../workers/QueueWorker";
 
 export default class NewsAnalyticsService {

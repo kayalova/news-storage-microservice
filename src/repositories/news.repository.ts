@@ -1,7 +1,7 @@
 import { DataSource, FindOneOptions } from "typeorm";
 import { UserEntity } from "../entities";
 import { NewsEntity } from '../entities/News.entity'
-import { ICreateOptions, IFindOptions, IPagination, UpdateBody } from "../models";
+import { INewsCreateOptions, INewsFindOptions, IPagination, UpdateBody } from "../models";
 
 export default class NewsRepository {
     private appDataSource: DataSource
@@ -14,7 +14,7 @@ export default class NewsRepository {
         this.userRepository = appDataSource.getRepository(UserEntity)
     }
 
-    async get(filter: IFindOptions, pagination?: IPagination): Promise<Array<NewsEntity>> {
+    async get(filter: INewsFindOptions, pagination?: IPagination): Promise<Array<NewsEntity>> {
         try {
             const news = await this.newsRepository.find({
                 where: filter,
@@ -49,7 +49,7 @@ export default class NewsRepository {
 
     }
 
-    async create(create: ICreateOptions): Promise<NewsEntity> {
+    async create(create: INewsCreateOptions): Promise<NewsEntity> {
         try {
             const author = await this.userRepository.findOneByOrFail({ id: create.author })
 

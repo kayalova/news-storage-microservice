@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import { IGetQuery, IFindOptions, ICreateBody, UpdateQuery, UpdateBody } from '../models/news.model';
+import { logRequest } from '../middleware';
+import { IGetNewsQuery, INewsFindOptions, INewsCreateBody, UpdateQuery, UpdateBody } from '../models/news.model';
 import NewsService from '../services/news.service';
 
 
@@ -26,9 +27,9 @@ export default class NewsRouter {
                 email,
                 skip,
                 take
-            } = req.query as IGetQuery
+            } = req.query as IGetNewsQuery
 
-            const filter: IFindOptions = {
+            const filter: INewsFindOptions = {
                 id,
                 header,
                 description,
@@ -73,13 +74,12 @@ export default class NewsRouter {
 
     public create = async (req: Request, res: Response) => {
         try {
-            const { header, description, authorId } = req.body as ICreateBody
+            const { header, description, authorId } = req.body as INewsCreateBody
 
             await this.newsService.create({ author: authorId, header, description })
 
-            res.send({
+            res.status(201).send({
                 statusMessage: "Successfully created",
-                status: 201
             })
         } catch (error) {
             res.send({
@@ -126,7 +126,7 @@ export default class NewsRouter {
     }
 
     public middlewares() {
-        this.router.use(this.logRequest)
+        this.router.use(logRequest('News.router'))
     }
 
     public routes() {
@@ -137,8 +137,4 @@ export default class NewsRouter {
         this.router.delete('/delete/:id', this.delete)
     }
 
-    public logRequest(req: Request, res: Response, next: NextFunction) {
-        console.log(`NewsRouter.${req.method} request`)
-        next()
-    }
 }

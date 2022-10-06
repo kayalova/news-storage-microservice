@@ -1,11 +1,15 @@
 import {
-    IFindOptions, IPagination, IGetQuery,
-    ICreateOptions, ICreateBody, UpdateNews,
+    INewsFindOptions, IPagination, IGetNewsQuery,
+    INewsCreateOptions, INewsCreateBody,
     UpdateBody, UpdateQuery
 } from "./news.model"
 
+import { ICreateUserBody } from './user.model'
+
 export {
-    IFindOptions, IPagination, IGetQuery,
-    ICreateOptions, ICreateBody, UpdateNews,
+    INewsFindOptions, IPagination, IGetNewsQuery,
+    INewsCreateOptions, INewsCreateBody,
     UpdateBody, UpdateQuery
 }
+
+export { ICreateUserBody } 

@@ -1,6 +1,7 @@
-import amqp from 'amqplib'
+import { UserEntity } from '../entities';
+import { ICreateUserBody } from '../models';
 
-import UserRepository from '../repository/user.repository';
+import UserRepository from '../repositories/user.repository';
 
 export default class UserService {
     private userRepository: UserRepository
@@ -9,10 +10,8 @@ export default class UserService {
         this.userRepository = userRepository
     }
 
-    async create() {
-        // await this.userRepository.create()
+    create(user: ICreateUserBody): Promise<UserEntity> {
+        return this.userRepository.create(user)
     }
-
-
 
 }

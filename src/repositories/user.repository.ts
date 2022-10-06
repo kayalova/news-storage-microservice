@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm'
 import { RoleEntity, UserEntity } from "../entities"
+import { ICreateUserBody } from '../models';
 
 class UserRepository {
     private userRepository;
@@ -10,25 +11,16 @@ class UserRepository {
         this.roleRepository = appDataSource.getRepository(RoleEntity)
     }
 
-    async create(user: any) {
-
+    async create(user: ICreateUserBody): Promise<UserEntity> {
         try {
-
             const role = await this.roleRepository.findOneByOrFail({ name: user.role })
 
-            const a = {
-                firstName: "Zarema",
-                lastName: "Kayalova",
-                email: "meowmeow@email.com",
-                role,
-            }
+            const created = this.userRepository.create({ ...user, role })
 
-            const user1 = this.userRepository.create(a)
-
-            await this.userRepository.save(user1)
-
+            return await this.userRepository.save(created)
         } catch (error) {
             console.error("UserRepository.create", error)
+            throw new Error(JSON.stringify(error))
         }
     }
 }
