@@ -10,7 +10,7 @@ export default class UserService {
     }
 
     async create() {
-        await this.userRepository.create()
+        // await this.userRepository.create()
     }
 
 

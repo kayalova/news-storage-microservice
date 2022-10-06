@@ -1,7 +1,5 @@
 import { DataSource } from 'typeorm'
 import { RoleEntity, UserEntity } from "../entities"
-import { appDataSource } from '../config/db.config'
-
 
 class UserRepository {
     private userRepository;
@@ -10,38 +8,27 @@ class UserRepository {
     constructor(appDataSource: DataSource) {
         this.userRepository = appDataSource.getRepository(UserEntity)
         this.roleRepository = appDataSource.getRepository(RoleEntity)
-        this.create()
     }
 
-    async create() {
+    async create(user: any) {
 
         try {
-            // const authorRole = await this.roleRepository.findOneByOrFail({
-            //     name: "author"
-            // });
 
-            const role = new RoleEntity()
-            role.name = "author"
-            role.actions = ["create", "read", "update", "delete"]
-            await this.roleRepository.save(role)
+            const role = await this.roleRepository.findOneByOrFail({ name: user.role })
 
-            const user = new UserEntity()
-            user.firstName = "Zarema"
-            user.lastName = "Kayalova"
-            user.email = "meowmeow@email.com"
+            const a = {
+                firstName: "Zarema",
+                lastName: "Kayalova",
+                email: "meowmeow@email.com",
+                role,
+            }
 
-            user.role = role // error
+            const user1 = this.userRepository.create(a)
 
-            //  this.userRepository.create({
-            //     firstName: "Zarema",
-            //     lastName: "Kayalova",
-            //     email: "meowmeow@email.com",
-            // })
-
-            await this.userRepository.save(user)
+            await this.userRepository.save(user1)
 
         } catch (error) {
-
+            console.error("UserRepository.create", error)
         }
     }
 }

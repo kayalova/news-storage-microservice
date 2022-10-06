@@ -1,7 +1,5 @@
-import amqp from 'amqplib'
-import { DataSource, FindOneOptions } from 'typeorm';
-
 import { NewsEntity } from '../entities/News.entity';
+import { ICreateOptions, IFindOptions, IPagination, UpdateBody } from '../models';
 import NewsRepository from '../repository/news.repository';
 import QueueWorker from '../workers/QueueWorker';
 import NewsAnalyticsService from './news_analytics.service';
@@ -9,29 +7,36 @@ import NewsAnalyticsService from './news_analytics.service';
 export default class NewsService {
     private queueWorker: QueueWorker
     private newsAnalyticsService: NewsAnalyticsService
-    private repository: NewsRepository
+    private newsRepository: NewsRepository
 
     constructor(queueWorker: QueueWorker, repository: NewsRepository) {
+        this.newsRepository = repository
         this.queueWorker = queueWorker
-        this.newsAnalyticsService = new NewsAnalyticsService(queueWorker, this.repository)
+        this.newsAnalyticsService = new NewsAnalyticsService(queueWorker, this.newsRepository)
         this.newsAnalyticsService.consume()
     }
 
 
-    async getAll() {
-
+    getAll(options: IFindOptions, pagination?: IPagination): Promise<Array<NewsEntity>> {
+        return this.newsRepository.get(options, pagination)
     }
 
-    async getOne(options: FindOneOptions<NewsEntity>) {
+    getOne(id: number): Promise<NewsEntity> {
+        return this.newsRepository.getOne(id)
     }
 
-
-    async updateOne(data: any) {
-
+    create(options: ICreateOptions): Promise<NewsEntity> {
+        return this.newsRepository.create(options)
     }
 
-    async createOne(news: NewsEntity) {
+    update(id: number, body: UpdateBody): Promise<Boolean> {
+        return this.newsRepository.update(id, body)
     }
+
+    delete(id: number): Promise<Boolean> {
+        return this.newsRepository.delete(id)
+    }
+
 
 
     async report(msg: any) {

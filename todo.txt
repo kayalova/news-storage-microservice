@@ -8,13 +8,16 @@
 
 ----------- Это первая итерация -------------
 
-1. Написать news репозиторий - create, get, update, delete
-2. Написать news service
-3. Написать эндпоинты(newsRouter) для сущности news - create, get, update, delete
+1. Написать news репозиторий - create, get, update, delete +
+2. Написать news service +
+3. Написать эндпоинты(newsRouter) для сущности news - create, get, update, delete +
 3.* переименовать news -> article
 
 4. Написать users репозиторий - create
 5. Написать users сервис - createUser
 6. Написать эндпоинты userRouter'a - create
+
+
+check datagrip
 
 ---------- Это вторая итерация -------------

@@ -29,7 +29,7 @@ export class UserEntity {
 
     @ManyToOne(() => RoleEntity, { cascade: true })
     @JoinColumn({ name: "role_id" })
-    role: UserRole
+    role: RoleEntity
 }
 
 
