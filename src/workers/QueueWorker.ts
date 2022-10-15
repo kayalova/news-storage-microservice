@@ -1,13 +1,13 @@
 import amqp from 'amqplib'
 
 export default class QueueWorker {
-    connection: amqp.Connection | undefined //TODO: как можно избавиться от undefined
-    channel: amqp.Channel | undefined
+    public connection: amqp.Connection | undefined //TODO: как можно избавиться от undefined
+    public channel: amqp.Channel | undefined
     msgOptions: amqp.Options.Publish | {}
 
     constructor(channelOptions?: amqp.Options.Publish) {
-        this.connection
-        this.channel
+        // this.connection
+        // this.channel
         this.msgOptions = channelOptions || {}
     }
 
@@ -21,7 +21,7 @@ export default class QueueWorker {
 
         } catch (error) {
             console.error(`Rabbitmq error: ${error}`)
-            process.exit(1)
+            process.exit(1) // todo: move
         }
     }
 
@@ -49,12 +49,14 @@ export default class QueueWorker {
         }
 
         await this.channel!.assertQueue(queue)
+
         console.log(`Listening to ${queue}`)
+
         this.channel!.consume(queue, async (data: any) => {
             const msg = JSON.parse(data?.content.toString())
             console.log(`${queue} receive message: ${JSON.stringify(msg)}`)
 
-            await handler(data)
+            await handler(msg, data)
         }, {
             noAck: true
         })

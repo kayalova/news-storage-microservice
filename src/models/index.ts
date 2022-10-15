@@ -4,12 +4,16 @@ import {
     UpdateBody, UpdateQuery
 } from "./news.model"
 
-import { ICreateUserBody } from './user.model'
+import { ICreateUserBody, ILoginBody } from './user.model'
 
 export {
     INewsFindOptions, IPagination, IGetNewsQuery,
-    INewsCreateOptions, INewsCreateBody,
-    UpdateBody, UpdateQuery
+    INewsCreateOptions, INewsCreateBody, UpdateBody,
+    UpdateQuery, ICreateUserBody, ILoginBody
 }
 
-export { ICreateUserBody } 
+
+export interface ISessionData {
+    key: string,
+    value: string
+}

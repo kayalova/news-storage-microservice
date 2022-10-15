@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm'
+import { DataSource, FindOptionsWhere } from 'typeorm'
 import { RoleEntity, UserEntity } from "../entities"
 import { ICreateUserBody } from '../models';
 
@@ -20,6 +20,16 @@ class UserRepository {
             return await this.userRepository.save(created)
         } catch (error) {
             console.error("UserRepository.create", error)
+            throw new Error(JSON.stringify(error))
+        }
+    }
+
+    async findOne(options: FindOptionsWhere<UserEntity>): Promise<UserEntity | null> {
+        try {
+            return await this.userRepository.findOneBy(options)
+        } catch (error) {
+            console.error(error)
+            // todo : finish
             throw new Error(JSON.stringify(error))
         }
     }

@@ -29,6 +29,8 @@ export default class NewsRouter {
                 take
             } = req.query as IGetNewsQuery
 
+            console.log(req.session)
+
             const filter: INewsFindOptions = {
                 id,
                 header,

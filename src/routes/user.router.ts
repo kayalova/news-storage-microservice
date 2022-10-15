@@ -17,9 +17,15 @@ export default class UserRouter {
 
     create = async (req: Request, res: Response) => {
         try {
-            const { firstName, lastName, email, role } = req.body as ICreateUserBody
+            const {
+                firstName,
+                lastName,
+                email,
+                password,
+                role
+            } = req.body as ICreateUserBody
 
-            await this.userService.create({ firstName, lastName, email, role })
+            await this.userService.create({ firstName, lastName, email, password, role })
 
             res.status(201).send({
                 message: "Successfully created"

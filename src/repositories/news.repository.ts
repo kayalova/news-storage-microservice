@@ -49,13 +49,18 @@ export default class NewsRepository {
 
     }
 
-    async create(create: INewsCreateOptions): Promise<NewsEntity> {
+    async create(create: INewsCreateOptions): Promise<any> {
         try {
             const author = await this.userRepository.findOneByOrFail({ id: create.author })
 
             const news = this.newsRepository.create({ ...create, author })
 
-            return await this.newsRepository.save(news) // todo: подумать над ответом
+            const result = await this.newsRepository.save(news) // todo: подумать над ответом
+            if (!result) {
+                throw new Error("Can not create news")
+            }
+
+            return news
         } catch (error) {
             console.error(error)
             throw new Error(JSON.stringify(error))
@@ -63,18 +68,23 @@ export default class NewsRepository {
     }
 
 
-    async update(id: number, updateBody: UpdateBody): Promise<Boolean> {
+    async update(id: number, updateBody: UpdateBody): Promise<any> {
         try {
-            const result = await this.newsRepository.update(
-                { id }, // когда передаем ид котрого нет, ошибка не выбрасывается
-                updateBody
-            )
 
+            const result = await this.newsRepository.createQueryBuilder()
+                .update(updateBody)
+                .where({ id })
+                .returning('*')
+                .execute()
+
+            // console.log(result.raw) // raw(pure postgres js object) != typeorm entity, в таких случаях пишут сериализаторы из js -> orm
+
+            console.log(result)
             if (!result.affected) {
                 throw new Error("Could not update news")
             }
 
-            return true
+            return result.raw[0]
 
         } catch (error) {
             console.error(error)

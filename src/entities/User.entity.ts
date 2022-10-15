@@ -27,6 +27,9 @@ export class UserEntity {
     @Column({ length: 100 })
     email: string
 
+    @Column({ length: 100 })
+    password: string
+
     @ManyToOne(() => RoleEntity, { cascade: true })
     @JoinColumn({ name: "role_id" })
     role: RoleEntity

@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import {
+    Entity, Column,
+    PrimaryGeneratedColumn,
+    ManyToOne, JoinColumn,
+    CreateDateColumn,
+    UpdateDateColumn
+} from "typeorm"
 import { UserEntity } from "./User.entity"
 
 @Entity({ name: "news" })
@@ -20,17 +26,21 @@ export class NewsEntity {
     @JoinColumn({ name: "user_id" })
     author: UserEntity
 
-    @CreateDateColumn({
+    @Column({
         name: "created_at",
         readonly: true,
-        type: 'timestamp'
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+        nullable: true,
     })
     createdAt: Date
 
-    @UpdateDateColumn({
+    @Column({
         name: "updated_at",
         readonly: true,
-        type: 'timestamp'
+        type: 'timestamp',
+        onUpdate: 'CURRENT_TIMESTAMP',
+        nullable: true,
     })
     updatedAt: Date
 }

@@ -3,15 +3,17 @@ import QueueWorker from "../workers/QueueWorker";
 
 export default class NewsAnalyticsService {
     private queueWorker: QueueWorker
-    private newsRepository: NewsRepository
+    // private newsRepository: NewsRepository
 
-    constructor(queueworker: QueueWorker, newsRepository: NewsRepository) {
+    constructor(queueworker: QueueWorker) {
         this.queueWorker = queueworker
-        this.newsRepository = newsRepository
+        // this.newsRepository = newsRepository
     }
 
     consume() {
-        this.queueWorker.consumeMessage(process.env.NEWS_ANALYTICS_REQUEST_QUEUE as string, () => {
+        const queue = process.env.NEWS_ANALYTICS_REQUEST_QUEUE as string
+        this.queueWorker.consumeMessage(queue, (msg: any, data: any) => {
+            console.log(`fields are ${JSON.stringify(msg)}`)
             // сохраняем в базу данных
         })
     }
