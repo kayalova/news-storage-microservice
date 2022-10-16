@@ -1,5 +1,3 @@
--- clickhouse
-CREATE DATABASE newsmicroservice
 
 
 

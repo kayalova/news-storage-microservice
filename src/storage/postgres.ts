@@ -15,4 +15,4 @@ export const appDataSource = new DataSource({
     migrations: [],
 })
 
-export const connection = appDataSource.initialize();
+export const connection = appDataSource.initialize(); // todo: export default

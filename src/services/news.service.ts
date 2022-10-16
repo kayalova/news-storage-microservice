@@ -29,11 +29,14 @@ export default class NewsService {
         return this.newsRepository.getOne(id)
     }
 
+
     async create(options: INewsCreateOptions): Promise<any> {
         try {
             const news = await this.newsRepository.create(options)
 
-            this.report(deserializeToClickhouse(news)) // ждать нет смысла, проверить нужен ли then
+            const a = deserializeToClickhouse(news) // ждать нет смысла, проверить нужен ли then
+            console.log(a)
+            this.report(a)
 
             return news
 

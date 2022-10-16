@@ -5,6 +5,8 @@ import { createClient } from "redis"
 
 import Server from './Server'
 import { appDataSource } from './storage/postgres'
+import clickhouseClient from './storage/clickhouse'
+
 
 import QueueWorker from './workers/QueueWorker'
 import NewsService from './services/news.service'
@@ -16,6 +18,7 @@ import UserRouter from './routes/user.router'
 import AuthService from './services/auth.service'
 import AuthRouter from './routes/auth.router'
 import NewsAnalyticsService from './services/news_analytics.service'
+import NewsAnalyticsRepository from './repositories/newsAnalytics.repository'
 
 (async () => {
     const redisClient = createClient({
@@ -42,7 +45,8 @@ import NewsAnalyticsService from './services/news_analytics.service'
     const newsService = new NewsService(queueWorker, newsRepository, userService)
     const newsRouter = new NewsRouter(newsService)
 
-    const newsAnalyticsService = new NewsAnalyticsService(queueWorker)
+    const newsAnalyticsRepository = new NewsAnalyticsRepository(clickhouseClient)
+    const newsAnalyticsService = new NewsAnalyticsService(queueWorker, newsAnalyticsRepository)
     newsAnalyticsService.consume()
 
     const authService = new AuthService(userService)
