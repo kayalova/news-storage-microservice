@@ -48,8 +48,9 @@ export default class Server {
         this.app.set('port', process.env.APP_PORT || 3001) // 3001 or "3001" ?
         this.app.use(session({
             store: new RedisStore({ client: this.redisClient }), // todo: перенсти клиента в storage
-            'secret': 'ILOVESAM', // todo: перенести в process.env или другйо конфиг
-            'saveUninitialized': true,
+            secret: 'ILOVESAM', // todo: перенести в process.env или другйо конфиг
+            saveUninitialized: true,
+            // resave: true
         }));
     }
 

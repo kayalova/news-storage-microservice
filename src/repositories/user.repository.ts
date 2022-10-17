@@ -14,7 +14,7 @@ class UserRepository {
     async create(user: ICreateUserBody): Promise<UserEntity> {
         try {
             const role = await this.roleRepository.findOneByOrFail({ name: user.role })
-
+            console.log('user is', user)
             const created = this.userRepository.create({ ...user, role })
 
             return await this.userRepository.save(created)

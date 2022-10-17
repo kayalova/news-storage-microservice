@@ -23,8 +23,8 @@ import NewsAnalyticsRepository from './repositories/newsAnalytics.repository'
 (async () => {
     const redisClient = createClient({
         // url: 'redis://127.0.0.1:6379', ??? excuse me
-        url: 'redis://localhost:6379',
-        legacyMode: true
+        url: process.env.REDIS_URL,
+        legacyMode: true // what was that
     })
 
     try {

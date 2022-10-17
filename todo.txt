@@ -128,4 +128,4 @@ proxy
 // 3520  - clickhouse password
 // datagrip3520meow - datagrip pasword]
 
-//
+// what is version in docker compose file  - версия формата описания

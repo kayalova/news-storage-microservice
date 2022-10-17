@@ -23,6 +23,10 @@ export class UserEntity {
         length: 100
     })
     lastName: string
+    /* 
+   
+
+    */
 
     @Column({ length: 100 })
     email: string

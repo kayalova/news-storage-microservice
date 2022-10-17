@@ -26,6 +26,7 @@ export default class AuthRouter {
 
         //@ts-ignore
         sess.password = loginData.value // todo: hash
+        console.log(sess)
         res.end("success")
     }
 

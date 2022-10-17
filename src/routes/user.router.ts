@@ -25,6 +25,8 @@ export default class UserRouter {
                 role
             } = req.body as ICreateUserBody
 
+            console.log(req.body)
+
             await this.userService.create({ firstName, lastName, email, password, role })
 
             res.status(201).send({
