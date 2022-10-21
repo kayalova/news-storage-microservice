@@ -1,9 +1,8 @@
-import { DataSource, FindOneOptions } from "typeorm";
-import { UserEntity } from "../entities";
-import { NewsEntity } from '../entities/News.entity'
+import { DataSource, UpdateResult } from "typeorm";
+import { UserEntity, NewsEntity } from "../entities";
 import { INewsCreateOptions, INewsFindOptions, IPagination, UpdateBody } from "../models";
 
-export default class NewsRepository {
+class NewsRepository {
     private appDataSource: DataSource
     private newsRepository;
     private userRepository;
@@ -37,6 +36,7 @@ export default class NewsRepository {
                 },
                 select: {
                     author: {
+                        id: true,
                         firstName: true,
                         lastName: true,
                         email: true
@@ -49,13 +49,13 @@ export default class NewsRepository {
 
     }
 
-    async create(create: INewsCreateOptions): Promise<any> {
+    async create(create: INewsCreateOptions): Promise<NewsEntity> {
         try {
             const author = await this.userRepository.findOneByOrFail({ id: create.author })
 
             const news = this.newsRepository.create({ ...create, author })
 
-            const result = await this.newsRepository.save(news) // todo: подумать над ответом
+            const result = await this.newsRepository.save(news)
             if (!result) {
                 throw new Error("Can not create news")
             }
@@ -68,23 +68,16 @@ export default class NewsRepository {
     }
 
 
-    async update(id: number, updateBody: UpdateBody): Promise<any> {
+    async update(id: number, updateBody: UpdateBody): Promise<UpdateResult> {
         try {
 
-            const result = await this.newsRepository.createQueryBuilder()
-                .update(updateBody)
-                .where({ id })
-                .returning('*')
-                .execute()
+            const result = await this.newsRepository.update({ id }, { ...updateBody, 'updatedAt': new Date() })
 
-            // console.log(result.raw) // raw(pure postgres js object) != typeorm entity, в таких случаях пишут сериализаторы из js -> orm
-
-            console.log(result)
             if (!result.affected) {
                 throw new Error("Could not update news")
             }
 
-            return result.raw[0]
+            return result
 
         } catch (error) {
             console.error(error)
@@ -108,3 +101,5 @@ export default class NewsRepository {
         }
     }
 }
+
+export default NewsRepository

@@ -2,8 +2,6 @@ import {
     Entity, Column,
     PrimaryGeneratedColumn,
     ManyToOne, JoinColumn,
-    CreateDateColumn,
-    UpdateDateColumn
 } from "typeorm"
 import { UserEntity } from "./User.entity"
 
@@ -37,9 +35,8 @@ export class NewsEntity {
 
     @Column({
         name: "updated_at",
-        readonly: true,
+        // readonly: true,
         type: 'timestamp',
-        onUpdate: 'CURRENT_TIMESTAMP',
         nullable: true,
     })
     updatedAt: Date

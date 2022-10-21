@@ -1,5 +1,6 @@
 version: "3.9"
 services:
+
   postgres:
     image: postgres:14.5
     env_file:
@@ -7,10 +8,30 @@ services:
     volumes:
       - /data/postgres:/var/lib/postgresql/data
     ports:
-      - "5432:5432" # HOST:CONTAINER
-  # redis:
-  #   image: redis:5.0
-  #   ports:
-  #     - "6379:6379"
-  #   environment:
-  #     - ALLOW_EMPTY_PASSWORD=true
+      - "5431:5432" # HOST:CONTAINER
+
+  redis:
+    image: redis:5.0
+    ports:
+      - "6378:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=true
+
+  clickhouse-server:
+    image: clickhouse/clickhouse-server:22.9.3.18
+    ports:
+      - "8124:8123"
+    volumes:
+      - /data/clickhouse/data:/var/lib/clickhouse
+      # - /data/clickhouse/logs: /val/log/clickhouse-server
+    env_file:
+      - .env
+
+  rabbitmq:
+    image: rabbitmq:3.8.2
+    # env_file:
+    #   - .env
+    volumes:
+      - /data/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "5671:5672"

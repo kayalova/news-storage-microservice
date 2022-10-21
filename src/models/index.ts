@@ -5,11 +5,12 @@ import {
 } from "./news.model"
 
 import { ICreateUserBody, ILoginBody } from './user.model'
+import { INewsHistory } from './news_analytics.model'
 
 export {
     INewsFindOptions, IPagination, IGetNewsQuery,
     INewsCreateOptions, INewsCreateBody, UpdateBody,
-    UpdateQuery, ICreateUserBody, ILoginBody
+    UpdateQuery, ICreateUserBody, ILoginBody, INewsHistory
 }
 
 

@@ -1,59 +1,47 @@
 import 'dotenv/config'
 import "reflect-metadata"
 
-import { createClient } from "redis"
-
 import Server from './Server'
-import { appDataSource } from './storage/postgres'
-import clickhouseClient from './storage/clickhouse'
-
-
+import { postgresClient, clickhouseClient } from './storage'
+import { NewsRouter, UserRouter, AuthRouter } from './routes'
 import QueueWorker from './workers/QueueWorker'
-import NewsService from './services/news.service'
-import NewsRouter from './routes/news.router'
-import NewsRepository from './repositories/news.repository'
-import UserRepository from './repositories/user.repository'
-import UserService from './services/user.service'
-import UserRouter from './routes/user.router'
-import AuthService from './services/auth.service'
-import AuthRouter from './routes/auth.router'
-import NewsAnalyticsService from './services/news_analytics.service'
-import NewsAnalyticsRepository from './repositories/newsAnalytics.repository'
+import {
+    NewsService,
+    UserService,
+    AuthService,
+    NewsAnalyticsService
+} from './services'
+import {
+    NewsRepository,
+    UserRepository,
+    NewsAnalyticsRepository
+} from './repositories'
+import rabbitmqConnection from './transport/rabbitmq.transport'
+
 
 (async () => {
-    const redisClient = createClient({
-        // url: 'redis://127.0.0.1:6379', ??? excuse me
-        url: process.env.REDIS_URL,
-        legacyMode: true // what was that
-    })
-
-    try {
-        await redisClient.connect()
-    } catch (error) {
-        console.error(error)
-    }
-
+    await rabbitmqConnection
 
     const queueWorker = new QueueWorker()
     await queueWorker.init()
-
-    const userRepository = new UserRepository(appDataSource)
-    const userService = new UserService(userRepository)
-    const userRouter = new UserRouter(userService)
-
-    const newsRepository = new NewsRepository(appDataSource)
-    const newsService = new NewsService(queueWorker, newsRepository, userService)
-    const newsRouter = new NewsRouter(newsService)
 
     const newsAnalyticsRepository = new NewsAnalyticsRepository(clickhouseClient)
     const newsAnalyticsService = new NewsAnalyticsService(queueWorker, newsAnalyticsRepository)
     newsAnalyticsService.consume()
 
+    const userRepository = new UserRepository(postgresClient)
+    const userService = new UserService(userRepository)
+    const userRouter = new UserRouter(userService)
+
+    const newsRepository = new NewsRepository(postgresClient)
+    const newsService = new NewsService(queueWorker, newsRepository)
+    const newsRouter = new NewsRouter(newsService)
+
     const authService = new AuthService(userService)
     const authRouter = new AuthRouter(authService)
 
-    const server = new Server(newsRouter, userRouter, authRouter, redisClient);
-    server.init()
+    const server = new Server(newsRouter, userRouter, authRouter);
+    await server.init()
     server.start()
 
 })()

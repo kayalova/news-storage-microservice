@@ -1,15 +1,13 @@
 import QueueWorker from "../workers/QueueWorker";
 import NewsAnalyticsRepository from "../repositories/newsAnalytics.repository";
 
-export default class NewsAnalyticsService {
+class NewsAnalyticsService {
     private queueWorker: QueueWorker
     private newsAnalyticsRepository: NewsAnalyticsRepository
-    // private newsRepository: NewsRepository
 
     constructor(queueworker: QueueWorker, newsAnalyticsRepository: NewsAnalyticsRepository) {
         this.queueWorker = queueworker
         this.newsAnalyticsRepository = newsAnalyticsRepository
-
     }
 
     consume() {
@@ -21,3 +19,5 @@ export default class NewsAnalyticsService {
         })
     }
 }
+
+export default NewsAnalyticsService

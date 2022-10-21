@@ -1,5 +1,5 @@
 import { DataSource, FindOptionsWhere } from 'typeorm'
-import { RoleEntity, UserEntity } from "../entities"
+import { RepositoryError, RoleEntity, UserEntity } from "../entities"
 import { ICreateUserBody } from '../models';
 
 class UserRepository {
@@ -14,7 +14,7 @@ class UserRepository {
     async create(user: ICreateUserBody): Promise<UserEntity> {
         try {
             const role = await this.roleRepository.findOneByOrFail({ name: user.role })
-            console.log('user is', user)
+
             const created = this.userRepository.create({ ...user, role })
 
             return await this.userRepository.save(created)
@@ -29,8 +29,10 @@ class UserRepository {
             return await this.userRepository.findOneBy(options)
         } catch (error) {
             console.error(error)
-            // todo : finish
-            throw new Error(JSON.stringify(error))
+            throw new RepositoryError({
+                name: 'User',
+                message: JSON.stringify(error) // what if remove json.stringify
+            })
         }
     }
 }

@@ -1,5 +1,7 @@
+import { ServiceError } from "../entities";
 import { ILoginBody, ISessionData } from "../models";
-import UserService from '../services/user.service'
+import { UserService } from '../services'
+import * as utils from '../utils'
 
 class AuthService {
     private userService: UserService
@@ -13,11 +15,19 @@ class AuthService {
         const user = await this.userService.getByEmail(email)
 
         if (!user) {
-            throw new Error(JSON.stringify({ error: "asd" })) // todo: finish
+            throw new ServiceError({
+                name: 'Auth',
+                message: "User with such email doesn't exists"
+            })
         }
 
-        if (user.password !== password) {
-            throw new Error(JSON.stringify({ error: 'password is not correct!!!' })) // todo: finish
+        const areEqualPasswords = await utils.compareHashed(password, user.password)
+
+        if (!areEqualPasswords) {
+            throw new ServiceError({
+                name: 'Auth',
+                message: "Invalid password"
+            })
         }
 
         return {

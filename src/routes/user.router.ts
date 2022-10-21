@@ -1,9 +1,10 @@
-import { Router, Request, Response, NextFunction } from 'express'
+import { Router, Request, Response } from 'express'
+
 import { logRequest } from '../middleware';
 import { ICreateUserBody } from '../models';
-import UserService from '../services/user.service'
+import { UserService } from '../services'
 
-export default class UserRouter {
+class UserRouter {
     public router: Router;
     public userService: UserService;
 
@@ -50,3 +51,5 @@ export default class UserRouter {
     }
 
 }
+
+export default UserRouter

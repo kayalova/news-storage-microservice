@@ -1,19 +1,20 @@
 import amqp from 'amqplib'
 
+import rabbitmqConnection from '../transport/rabbitmq.transport'
+
 export default class QueueWorker {
-    public connection: amqp.Connection | undefined //TODO: как можно избавиться от undefined
-    public channel: amqp.Channel | undefined
+    public connection: amqp.Connection
+    public channel: amqp.Channel
     msgOptions: amqp.Options.Publish | {}
 
     constructor(channelOptions?: amqp.Options.Publish) {
-        // this.connection
-        // this.channel
         this.msgOptions = channelOptions || {}
     }
 
     async init() {
         try {
-            this.connection = await amqp.connect(process.env.RABBITMQ_HOST as string)
+
+            this.connection = await rabbitmqConnection
             this.channel = await this.connection.createChannel()
             console.log('Successfully connected to rabbitmq')
 

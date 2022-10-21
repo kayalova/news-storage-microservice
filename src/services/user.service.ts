@@ -1,9 +1,9 @@
 import { UserEntity } from '../entities';
 import { ICreateUserBody } from '../models';
+import { UserRepository } from '../repositories';
 
-import UserRepository from '../repositories/user.repository';
 
-export default class UserService {
+class UserService {
     private userRepository: UserRepository
 
     constructor(userRepository: UserRepository) {
@@ -23,3 +23,5 @@ export default class UserService {
     }
 
 }
+
+export default UserService

@@ -1,23 +1,16 @@
-import { NewsEntity } from '../entities/News.entity';
-import { INewsCreateOptions, INewsFindOptions, IPagination, UpdateBody } from '../models';
-import NewsRepository from '../repositories/news.repository';
+import { INewsCreateOptions, INewsFindOptions, INewsHistory, IPagination, UpdateBody } from '../models';
 import { deserializeToClickhouse } from '../repositories/news.serializator';
+import NewsRepository from '../repositories/news.repository';
 import QueueWorker from '../workers/QueueWorker';
-import NewsAnalyticsService from './news_analytics.service';
-import UserService from './user.service';
+import { NewsEntity } from '../entities';
 
-export default class NewsService {
+class NewsService {
     private queueWorker: QueueWorker
-    // private newsAnalyticsService: NewsAnalyticsService
     private newsRepository: NewsRepository
-    private userService: UserService
 
-    constructor(queueWorker: QueueWorker, repository: NewsRepository, userService: UserService) {
+    constructor(queueWorker: QueueWorker, repository: NewsRepository) {
         this.newsRepository = repository
         this.queueWorker = queueWorker
-        this.userService = userService
-        // this.newsAnalyticsService = new NewsAnalyticsService(queueWorker)
-        // this.newsAnalyticsService.consume()
     }
 
 
@@ -29,38 +22,27 @@ export default class NewsService {
         return this.newsRepository.getOne(id)
     }
 
-
-    async create(options: INewsCreateOptions): Promise<any> {
+    async create(options: INewsCreateOptions): Promise<NewsEntity> {
         try {
             const news = await this.newsRepository.create(options)
 
-            const a = deserializeToClickhouse(news) // ждать нет смысла, проверить нужен ли then
-            console.log(a)
-            this.report(a)
+            this.report(deserializeToClickhouse(news))
 
             return news
-
         } catch (error) {
             throw new Error(JSON.stringify(error))
         }
 
     }
 
-    async update(id: number, body: UpdateBody): Promise<any> {
-        const news = await this.newsRepository.update(id, body)
+    async update(id: number, body: UpdateBody): Promise<NewsEntity> {
+        await this.newsRepository.update(id, body)
 
-        if (news) {
-            const user = await this.userService.getById(news.user_id)
-            const id = news.user_id;
+        const newsWithAuthor = await this.getOne(id)
 
-            delete news.user_id;
-            this.report({ ...news, userId: id })
+        this.report(deserializeToClickhouse(newsWithAuthor))
 
-
-            return { ...news, author: { firstName: user?.firstName, lastName: user?.lastName, id } }
-        }
-
-        // return isUpdated
+        return newsWithAuthor
     }
 
     delete(id: number): Promise<Boolean> {
@@ -68,14 +50,11 @@ export default class NewsService {
     }
 
 
-
-    async report(msg: any) {
+    async report(msg: INewsHistory) {
         const queue = process.env.NEWS_ANALYTICS_REQUEST_QUEUE as string
         await this.queueWorker.sendMessage(queue, JSON.stringify({ data: msg }))
-
-        // this.queueWorker.consumeMessage(process.env.NEWS_UPDATE_QUEUE as string, async (data: any) => {
-        // const msg = JSON.parse(data?.content.toString())
-        // })
     }
 
 }
+
+export default NewsService

@@ -1,12 +1,11 @@
 import { createClient } from '@clickhouse/client'
 
-const client = createClient({
-    host: `http://localhost:8123`,
-    password: '3520',
-    database: 'newsmicroservice',
+export default createClient({
+    username: process.env.CLICKHOUSE_USER,
+    password: process.env.CLICKHOUSE_PASSWORD,
+    database: process.env.CLICKHOUSE_DB,
+    host: process.env.CLICKHOUSE_URL,
     log: {
         enable: true
     }
 })
-
-export default client

@@ -14,7 +14,7 @@ export type UpdateQuery = UpdateBody & { id: number }
 
 /* 
 не проверять на уровне типов что передается хотя бы одно поле - может быть избыточно
-а проверял бы в контроллеое 
+можно проверять в контроллере 
 */
 
 export interface INewsFindOptions {
@@ -24,7 +24,7 @@ export interface INewsFindOptions {
     author?: { firstName?: string, lastName?: string, email?: string },
 }
 
-export interface IPagination { // todo: подумать над неймингом
+export interface IPagination {
     skip?: number,
     take?: number
 }
@@ -51,6 +51,3 @@ export interface INewsCreateBody {
     description: string,
     authorId: number
 }
-
-
-// export interface IGetOptions extends INewsFindOptions, IPagination { }

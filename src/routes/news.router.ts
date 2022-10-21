@@ -1,10 +1,16 @@
 import { Router, Request, Response, NextFunction } from 'express'
+
 import { logRequest } from '../middleware';
-import { IGetNewsQuery, INewsFindOptions, INewsCreateBody, UpdateQuery, UpdateBody } from '../models/news.model';
-import NewsService from '../services/news.service';
+import {
+    UpdateBody,
+    UpdateQuery,
+    IGetNewsQuery,
+    INewsCreateBody,
+    INewsFindOptions,
+} from '../models';
+import { NewsService } from '../services';
 
-
-export default class NewsRouter {
+class NewsRouter {
     public router: Router;
     public newsService: NewsService;
 
@@ -58,7 +64,7 @@ export default class NewsRouter {
     public getOne = async (req: Request, res: Response) => {
         try {
             const { id } = req.params
-
+            console.log(req.session)
             const article = await this.newsService.getOne(Number(id))
 
             res.send({
@@ -66,6 +72,7 @@ export default class NewsRouter {
             })
 
         } catch (error) {
+            console.log(error)
             res.send({
                 error: "Get one error",
                 errorMessage: error
@@ -77,6 +84,7 @@ export default class NewsRouter {
     public create = async (req: Request, res: Response) => {
         try {
             const { header, description, authorId } = req.body as INewsCreateBody
+            console.log(req.session)
 
             await this.newsService.create({ author: authorId, header, description })
 
@@ -93,6 +101,7 @@ export default class NewsRouter {
 
     public update = async (req: Request, res: Response) => {
         try {
+            console.log(req.session)
 
             const { header, description, id } = req.body as UpdateQuery
 
@@ -109,6 +118,7 @@ export default class NewsRouter {
 
     public delete = async (req: Request, res: Response) => {
         try {
+            console.log(req.session)
             const { id } = req.params
 
             await this.newsService.delete(Number(id))
@@ -140,3 +150,6 @@ export default class NewsRouter {
     }
 
 }
+
+
+export default NewsRouter

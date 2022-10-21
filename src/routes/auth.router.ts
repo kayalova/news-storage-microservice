@@ -1,10 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express'
+
 import { logRequest } from '../middleware';
 import { ILoginBody } from '../models';
-import AuthService from '../services/auth.service';
+import { AuthService } from '../services'
 
-
-export default class AuthRouter {
+class AuthRouter {
     public router: Router;
     public authService: AuthService;
 
@@ -39,3 +39,5 @@ export default class AuthRouter {
     }
 
 }
+
+export default AuthRouter

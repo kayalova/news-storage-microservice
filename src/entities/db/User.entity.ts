@@ -1,11 +1,14 @@
 import {
     Entity,
-    Column, PrimaryGeneratedColumn,
+    Column,
     ManyToOne,
     JoinColumn,
+    PrimaryGeneratedColumn,
+    BeforeInsert,
 } from "typeorm"
 
 import { RoleEntity } from "./Role.entity"
+import * as utils from '../../utils'
 
 @Entity({ name: "users" })
 export class UserEntity {
@@ -23,10 +26,6 @@ export class UserEntity {
         length: 100
     })
     lastName: string
-    /* 
-   
-
-    */
 
     @Column({ length: 100 })
     email: string
@@ -37,6 +36,12 @@ export class UserEntity {
     @ManyToOne(() => RoleEntity, { cascade: true })
     @JoinColumn({ name: "role_id" })
     role: RoleEntity
+
+    @BeforeInsert()
+    async hashPassword() {
+        this.password = await utils.hash(this.password)
+    }
+
 }
 
 

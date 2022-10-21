@@ -5,8 +5,8 @@ CREATE TABLE news_history (
     `news_id` UInt32,
     `header` FixedString(255),
     `description` String,
-    `created_at` Date,
-    `updated_at` Nullable(Date),
+    `created_at` Datetime,
+    `updated_at` Nullable(Datetime),
     `author` String
 )
 ENGINE = MergeTree
@@ -22,7 +22,6 @@ ORDER BY news_id;
 кликхаусу не нужен уникальный ид (для каждой строки как в случае с постгресом)
 
 
-            1 asd qqweqwe author: {email: zarema firstname: zarema}
 news_id     1; 1; 2 ; 3
 header      asd; asd
 descr       
