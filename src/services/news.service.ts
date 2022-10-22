@@ -23,16 +23,11 @@ class NewsService {
     }
 
     async create(options: INewsCreateOptions): Promise<NewsEntity> {
-        try {
-            const news = await this.newsRepository.create(options)
+        const news = await this.newsRepository.create(options)
 
-            this.report(deserializeToClickhouse(news))
+        this.report(deserializeToClickhouse(news))
 
-            return news
-        } catch (error) {
-            throw new Error(JSON.stringify(error))
-        }
-
+        return news
     }
 
     async update(id: number, body: UpdateBody): Promise<NewsEntity> {
@@ -51,6 +46,7 @@ class NewsService {
 
 
     async report(msg: INewsHistory) {
+        // add try catch
         const queue = process.env.NEWS_ANALYTICS_REQUEST_QUEUE as string
         await this.queueWorker.sendMessage(queue, JSON.stringify({ data: msg }))
     }

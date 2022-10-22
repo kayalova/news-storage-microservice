@@ -86,10 +86,12 @@ class NewsRouter {
             const { header, description, authorId } = req.body as INewsCreateBody
             console.log(req.session)
 
-            await this.newsService.create({ author: authorId, header, description })
+            const createdNews = await this.newsService.create({ author: authorId, header, description })
 
             res.status(201).send({
-                statusMessage: "Successfully created",
+                message: "Successfully created",
+                news: createdNews
+
             })
         } catch (error) {
             res.send({

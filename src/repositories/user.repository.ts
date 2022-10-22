@@ -17,10 +17,12 @@ class UserRepository {
 
             const created = this.userRepository.create({ ...user, role })
 
-            return await this.userRepository.save(created)
+            return await this.userRepository.save(created) // todo: compare to news create?
         } catch (error) {
-            console.error("UserRepository.create", error)
-            throw new Error(JSON.stringify(error))
+            throw new RepositoryError({
+                location: 'UserRepository.create',
+                message: JSON.stringify(error) // what if remove json.stringify
+            })
         }
     }
 
@@ -28,10 +30,9 @@ class UserRepository {
         try {
             return await this.userRepository.findOneBy(options)
         } catch (error) {
-            console.error(error)
             throw new RepositoryError({
-                name: 'User',
-                message: JSON.stringify(error) // what if remove json.stringify
+                location: 'UserRepository.findOne',
+                message: error
             })
         }
     }

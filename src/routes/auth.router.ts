@@ -17,6 +17,7 @@ class AuthRouter {
     }
 
     public login = async (req: Request, res: Response) => {
+        // add try catch
         const { email, password } = req.body as ILoginBody
         const loginData = await this.authService.login({ email, password })
 

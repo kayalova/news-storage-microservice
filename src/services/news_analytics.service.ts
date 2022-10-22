@@ -13,7 +13,6 @@ class NewsAnalyticsService {
     consume() {
         const queue = process.env.NEWS_ANALYTICS_REQUEST_QUEUE as string
         this.queueWorker.consumeMessage(queue, (msg: any, data: any) => {
-            // сохраняем в базу данных
             this.newsAnalyticsRepository.insert(msg).then(() => { })
 
         })

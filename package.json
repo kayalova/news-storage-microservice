@@ -4,6 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "app": "tsc && node ./build/app.js",
         "build": "tsc",
         "dev": "npx kill-port 3001 && nodemon src/app.ts",
         "eslint-fix": "npx eslint ./src/**/*.ts --fix",

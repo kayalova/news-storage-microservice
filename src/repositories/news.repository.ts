@@ -1,5 +1,5 @@
 import { DataSource, UpdateResult } from "typeorm";
-import { UserEntity, NewsEntity } from "../entities";
+import { UserEntity, NewsEntity, RepositoryError } from "../entities";
 import { INewsCreateOptions, INewsFindOptions, IPagination, UpdateBody } from "../models";
 
 class NewsRepository {
@@ -23,7 +23,10 @@ class NewsRepository {
 
             return news
         } catch (error) {
-            throw new Error(JSON.stringify(error))
+            throw new RepositoryError({
+                location: "NewsRepository.get",
+                message: error
+            })
         }
     }
 
@@ -44,7 +47,10 @@ class NewsRepository {
                 }
             })
         } catch (error) {
-            throw new Error(JSON.stringify(error)) // doest not work, todo: handle
+            throw new RepositoryError({
+                location: "NewsRepository.getOne",
+                message: error
+            })
         }
 
     }
@@ -57,13 +63,18 @@ class NewsRepository {
 
             const result = await this.newsRepository.save(news)
             if (!result) {
-                throw new Error("Can not create news")
+                throw new RepositoryError({
+                    location: "NewsRepository.create",
+                    message: "Got false returning value after save request"
+                })
             }
 
             return news
         } catch (error) {
-            console.error(error)
-            throw new Error(JSON.stringify(error))
+            throw new RepositoryError({
+                location: "NewsRepository.create",
+                message: error
+            })
         }
     }
 
@@ -74,14 +85,19 @@ class NewsRepository {
             const result = await this.newsRepository.update({ id }, { ...updateBody, 'updatedAt': new Date() })
 
             if (!result.affected) {
-                throw new Error("Could not update news")
+                throw new RepositoryError({
+                    location: "NewsRepository.update",
+                    message: "Got UpdateResult.affected false"
+                })
             }
 
             return result
 
         } catch (error) {
-            console.error(error)
-            throw new Error(JSON.stringify(error))
+            throw new RepositoryError({
+                location: "NewsRepository.update",
+                message: error
+            })
         }
 
     }
@@ -91,13 +107,18 @@ class NewsRepository {
             const result = await this.newsRepository.delete(id)
 
             if (!result.affected) {
-                throw new Error("Could not delete news")
+                throw new RepositoryError({
+                    location: "NewsRepository.delete",
+                    message: "Got DeleteResult.affected false"
+                })
             }
 
             return true
         } catch (error) {
-            console.error(error)
-            throw new Error(JSON.stringify(error))
+            throw new RepositoryError({
+                location: "NewsRepository.delete",
+                message: error
+            })
         }
     }
 }

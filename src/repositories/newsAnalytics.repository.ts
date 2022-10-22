@@ -1,4 +1,6 @@
 import { ClickHouseClient } from '@clickhouse/client'
+
+import { RepositoryError } from '../entities';
 import { INewsHistory } from '../models';
 
 class NewsAnalyticsRepository {
@@ -16,8 +18,10 @@ class NewsAnalyticsRepository {
                 format: 'JSONObjectEachRow'
             })
         } catch (error) {
-            console.error(JSON.stringify(error))
-            throw new Error(JSON.stringify(error))
+            throw new RepositoryError({
+                location: 'NewsAnalyticsRepository.insert',
+                message: error
+            })
         }
     }
 }

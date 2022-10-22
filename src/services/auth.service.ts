@@ -16,7 +16,7 @@ class AuthService {
 
         if (!user) {
             throw new ServiceError({
-                name: 'Auth',
+                location: 'AuthService.login',
                 message: "User with such email doesn't exists"
             })
         }
@@ -25,7 +25,7 @@ class AuthService {
 
         if (!areEqualPasswords) {
             throw new ServiceError({
-                name: 'Auth',
+                location: 'AuthService.login',
                 message: "Invalid password"
             })
         }
