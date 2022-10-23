@@ -22,10 +22,10 @@ class NewsRepository {
             })
 
             return news
-        } catch (error) {
+        } catch (error: any) {
             throw new RepositoryError({
                 location: "NewsRepository.get",
-                message: error
+                message: error.message
             })
         }
     }
@@ -46,10 +46,10 @@ class NewsRepository {
                     }
                 }
             })
-        } catch (error) {
+        } catch (error: any) {
             throw new RepositoryError({
                 location: "NewsRepository.getOne",
-                message: error
+                message: error.message
             })
         }
 
@@ -70,10 +70,10 @@ class NewsRepository {
             }
 
             return news
-        } catch (error) {
+        } catch (error: any) {
             throw new RepositoryError({
                 location: "NewsRepository.create",
-                message: error
+                message: error.message
             })
         }
     }
@@ -93,10 +93,10 @@ class NewsRepository {
 
             return result
 
-        } catch (error) {
+        } catch (error: any) {
             throw new RepositoryError({
                 location: "NewsRepository.update",
-                message: error
+                message: error.message
             })
         }
 
@@ -114,10 +114,10 @@ class NewsRepository {
             }
 
             return true
-        } catch (error) {
+        } catch (error: any) {
             throw new RepositoryError({
                 location: "NewsRepository.delete",
-                message: error
+                message: error.message
             })
         }
     }

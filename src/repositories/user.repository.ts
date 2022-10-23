@@ -18,10 +18,18 @@ class UserRepository {
             const created = this.userRepository.create({ ...user, role })
 
             return await this.userRepository.save(created) // todo: compare to news create?
-        } catch (error) {
+        } catch (error: any) {
+
+            if (error?.driverError?.code === '23505') { //unique_violation 
+                throw new RepositoryError({
+                    location: 'UserRepository.create',
+                    message: "User with such email already exists"
+                })
+            }
+
             throw new RepositoryError({
                 location: 'UserRepository.create',
-                message: JSON.stringify(error) // what if remove json.stringify
+                message: error.message
             })
         }
     }
@@ -29,10 +37,10 @@ class UserRepository {
     async findOne(options: FindOptionsWhere<UserEntity>): Promise<UserEntity | null> {
         try {
             return await this.userRepository.findOneBy(options)
-        } catch (error) {
+        } catch (error: any) {
             throw new RepositoryError({
                 location: 'UserRepository.findOne',
-                message: error
+                message: error.message
             })
         }
     }

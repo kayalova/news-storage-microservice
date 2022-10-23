@@ -17,10 +17,10 @@ class NewsAnalyticsRepository {
                 values: [data],
                 format: 'JSONObjectEachRow'
             })
-        } catch (error) {
+        } catch (error: any) {
             throw new RepositoryError({
                 location: 'NewsAnalyticsRepository.insert',
-                message: error
+                message: error.message
             })
         }
     }

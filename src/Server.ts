@@ -39,7 +39,7 @@ export default class Server {
     public async runStorageClients() {
         try {
             await this.redisClient.connect()
-            console.log('Successfully created to redis')
+            console.log('Successfully connected to redis')
             await postgresClient.initialize()
             console.log('Successfully connected to postgresql')
 
@@ -63,7 +63,7 @@ export default class Server {
         this.app.use(session({
             store: new RedisStore({ client: this.redisClient }),
             secret: process.env.SESSION_SECRET as string,
-            saveUninitialized: true,
+            saveUninitialized: false,
         }));
     }
 
@@ -72,3 +72,5 @@ export default class Server {
         this.app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
     }
 }
+
+

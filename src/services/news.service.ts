@@ -46,7 +46,7 @@ class NewsService {
 
 
     async report(msg: INewsHistory) {
-        // add try catch
+        // todo: add try catch
         const queue = process.env.NEWS_ANALYTICS_REQUEST_QUEUE as string
         await this.queueWorker.sendMessage(queue, JSON.stringify({ data: msg }))
     }

@@ -1,4 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express'
+import { HttpResponseEntity, RepositoryError, ServiceError } from '../entities';
 
 import { logRequest } from '../middleware';
 import { ILoginBody } from '../models';
@@ -17,19 +18,43 @@ class AuthRouter {
     }
 
     public login = async (req: Request, res: Response) => {
-        // add try catch
-        const { email, password } = req.body as ILoginBody
-        const loginData = await this.authService.login({ email, password })
+        try {
+            const { email, password } = req.body as ILoginBody
+            const loginData = await this.authService.login({ email, password })
 
-        const sess = req.session
-        //@ts-ignore
-        sess.user = loginData.key
+            const sess = req.session
+            //@ts-ignore
+            sess.user = loginData.key
+            //@ts-ignore
+            sess.password = loginData.value
 
-        //@ts-ignore
-        sess.password = loginData.value // todo: hash
-        console.log(sess)
-        res.end("success")
+            res.send(new HttpResponseEntity({
+                error: false,
+                message: "You are successfully authorized",
+                data: req.sessionID
+
+            }))
+
+            res.end("success")
+
+        } catch (error: any) {
+
+            if (error instanceof ServiceError) {
+                res.status(403).send(new HttpResponseEntity({
+                    error: true,
+                    message: error.message,
+                }).getBody())
+            }
+
+            if (error instanceof RepositoryError) {
+                res.status(500).send(new HttpResponseEntity({
+                    error: true,
+                    message: "Database error",
+                }).getBody())
+            }
+        }
     }
+
 
     public middlewares() {
         this.router.use(logRequest('Auth.router'))
