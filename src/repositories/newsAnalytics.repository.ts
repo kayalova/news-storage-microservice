@@ -15,7 +15,7 @@ class NewsAnalyticsRepository {
             return await this.clickhouseClient.insert({
                 table: 'news_history',
                 values: [data],
-                format: 'JSONObjectEachRow'
+                format: 'JSONEachRow'
             })
         } catch (error: any) {
             throw new RepositoryError({

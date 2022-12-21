@@ -17,13 +17,14 @@ class AuthService {
         if (!user) {
             throw new ServiceError({
                 location: 'AuthService.login',
-                message: "User with such email doesn't exists"
+                message: "User with such email doesn't exist"
             })
         }
 
         const areEqualPasswords = await utils.compareHashed(password, user.password)
 
         if (!areEqualPasswords) {
+
             throw new ServiceError({
                 location: 'AuthService.login',
                 message: "Invalid password"

@@ -32,7 +32,7 @@ $ npm install
 
 ```sh
 $ docker-compose up
-$ npm run start
+$ npm run dev
 ```
 
 ## API 
@@ -74,7 +74,7 @@ body: json or form urlencoded
 {
     header: string, 
     description: string, 
-    id: string // should be actual id of author
+    authorId: string // should be actual id of author
 }
 
 PUT /api/news/update

@@ -18,7 +18,7 @@ class NewsService {
         return this.newsRepository.get(options, pagination)
     }
 
-    getOne(id: number): Promise<NewsEntity> {
+    getOne(id: number): Promise<NewsEntity | null> {
         return this.newsRepository.getOne(id)
     }
 
@@ -30,12 +30,15 @@ class NewsService {
         return news
     }
 
-    async update(id: number, body: UpdateBody): Promise<NewsEntity> {
+    async update(id: number, body: UpdateBody): Promise<NewsEntity | null> {
         await this.newsRepository.update(id, body)
 
         const newsWithAuthor = await this.getOne(id)
-
-        this.report(deserializeToClickhouse(newsWithAuthor))
+        console.log(1)
+        if (newsWithAuthor) {
+            console.log(2)
+            this.report(deserializeToClickhouse(newsWithAuthor))
+        }
 
         return newsWithAuthor
     }
@@ -46,7 +49,8 @@ class NewsService {
 
 
     async report(msg: INewsHistory) {
-        // todo: add try catch
+        console.log('report');
+
         const queue = process.env.NEWS_ANALYTICS_REQUEST_QUEUE as string
         await this.queueWorker.sendMessage(queue, JSON.stringify({ data: msg }))
     }

@@ -1,9 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import { HttpResponseEntity, RepositoryError, ServiceError } from '../entities';
 
+import { HttpResponseEntity, RepositoryError, ServiceError } from '../entities';
 import { logRequest } from '../middleware';
 import { ILoginBody } from '../models';
 import { AuthService } from '../services'
+import * as middleware from '../middleware'
 
 class AuthRouter {
     public router: Router;
@@ -24,21 +25,18 @@ class AuthRouter {
 
             const sess = req.session
             //@ts-ignore
-            sess.user = loginData.key
+            sess.email = loginData.key
             //@ts-ignore
             sess.password = loginData.value
 
             res.send(new HttpResponseEntity({
                 error: false,
                 message: "You are successfully authorized",
-                data: req.sessionID
-
             }))
 
             res.end("success")
 
         } catch (error: any) {
-
             if (error instanceof ServiceError) {
                 res.status(403).send(new HttpResponseEntity({
                     error: true,
@@ -61,7 +59,11 @@ class AuthRouter {
     }
 
     public routes() {
-        this.router.post('/login', this.login)
+        this.router.post(
+            '/login',
+            middleware.validateAuthLogin,
+            this.login
+        )
     }
 
 }

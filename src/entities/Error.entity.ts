@@ -1,12 +1,12 @@
 
 interface IErrorBody {
     location: string,
-    message: string, // ?
+    message: string,
     meta?: object
 }
 
 export class RepositoryError extends Error {
-    public name = 'RepositoryError';
+    public NAME = 'RepositoryError';
     public message: string;
     public location: string
 
@@ -21,7 +21,7 @@ export class RepositoryError extends Error {
 }
 
 export class ServiceError extends Error {
-    public name = 'ServiceError';
+    public NAME = 'ServiceError';
     public message: string;
     public location: string
 
@@ -34,5 +34,3 @@ export class ServiceError extends Error {
         console.error(data.location, data.message)
     }
 }
-
-// ERROR_CONST 

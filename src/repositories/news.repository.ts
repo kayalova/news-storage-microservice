@@ -1,14 +1,13 @@
 import { DataSource, UpdateResult } from "typeorm";
+
 import { UserEntity, NewsEntity, RepositoryError } from "../entities";
 import { INewsCreateOptions, INewsFindOptions, IPagination, UpdateBody } from "../models";
 
 class NewsRepository {
-    private appDataSource: DataSource
     private newsRepository;
     private userRepository;
 
     constructor(appDataSource: DataSource) {
-        this.appDataSource = appDataSource
         this.newsRepository = appDataSource.getRepository(NewsEntity)
         this.userRepository = appDataSource.getRepository(UserEntity)
     }
@@ -30,9 +29,9 @@ class NewsRepository {
         }
     }
 
-    async getOne(id: number): Promise<NewsEntity> {
+    async getOne(id: number): Promise<NewsEntity | null> {
         try {
-            return await this.newsRepository.findOneOrFail({
+            return await this.newsRepository.findOne({ // почему fail
                 where: { id },
                 relations: {
                     author: true
@@ -52,16 +51,25 @@ class NewsRepository {
                 message: error.message
             })
         }
-
     }
 
     async create(create: INewsCreateOptions): Promise<NewsEntity> {
         try {
-            const author = await this.userRepository.findOneByOrFail({ id: create.author })
+            const author = await this.userRepository.findOneOrFail({
+                where: { id: create.author },
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                }
+            })
+
 
             const news = this.newsRepository.create({ ...create, author })
 
             const result = await this.newsRepository.save(news)
+
             if (!result) {
                 throw new RepositoryError({
                     location: "NewsRepository.create",
@@ -99,7 +107,6 @@ class NewsRepository {
                 message: error.message
             })
         }
-
     }
 
     async delete(id: number): Promise<Boolean> {
@@ -109,7 +116,7 @@ class NewsRepository {
             if (!result.affected) {
                 throw new RepositoryError({
                     location: "NewsRepository.delete",
-                    message: "Got DeleteResult.affected false"
+                    message: "Could not delete the record. Please provide existing news id. You can check this making /api/news/get/:id request"
                 })
             }
 

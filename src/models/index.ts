@@ -1,16 +1,18 @@
+import { Request } from "express";
+import { Session } from "express-session";
+
+import { INewsHistory } from './news_analytics.model'
+import { IUserCreateBody, ILoginBody } from './user.model'
 import {
-    INewsFindOptions, IPagination, IGetNewsQuery,
+    INewsFindOptions, IPagination, INewsGetQuery,
     INewsCreateOptions, INewsCreateBody,
     UpdateBody, UpdateQuery
 } from "./news.model"
 
-import { ICreateUserBody, ILoginBody } from './user.model'
-import { INewsHistory } from './news_analytics.model'
-
 export {
-    INewsFindOptions, IPagination, IGetNewsQuery,
+    INewsFindOptions, IPagination, INewsGetQuery,
     INewsCreateOptions, INewsCreateBody, UpdateBody,
-    UpdateQuery, ICreateUserBody, ILoginBody, INewsHistory
+    UpdateQuery, IUserCreateBody, ILoginBody, INewsHistory
 }
 
 
@@ -24,10 +26,6 @@ export interface IHttpResponse {
     message: string | object,
     data?: any
 }
-
-
-import { Request } from "express";
-import { Session } from "express-session";
 
 export type SessionWithUser = Session & { email?: string };
 

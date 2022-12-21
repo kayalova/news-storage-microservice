@@ -4,7 +4,8 @@ import { formatDateToClickhouse } from "../utils"
 
 // from typeorm entity to clickhouse
 export function deserializeToClickhouse(news: NewsEntity): INewsHistory {
-    console.log(news.createdAt)
+    console.log(3);
+
     return {
         news_id: news.id,
         header: news.header,

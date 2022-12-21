@@ -1,9 +1,9 @@
 import { Router, Request, Response } from 'express'
-import { HttpResponseEntity, RepositoryError } from '../entities';
 
-import { logRequest } from '../middleware';
-import { ICreateUserBody } from '../models';
+import * as middleware from '../middleware';
 import { UserService } from '../services'
+import { IUserCreateBody } from '../models';
+import { HttpResponseEntity, RepositoryError } from '../entities';
 
 class UserRouter {
     public router: Router;
@@ -25,8 +25,7 @@ class UserRouter {
                 email,
                 password,
                 role
-            } = req.body as ICreateUserBody
-
+            } = req.body as IUserCreateBody
 
             const createdNews = await this.userService.create({ firstName, lastName, email, password, role })
 
@@ -48,11 +47,15 @@ class UserRouter {
     }
 
     public middlewares() {
-        this.router.use(logRequest('User.router'))
+        this.router.use(middleware.logRequest('User.router'))
     }
 
     public routes() {
-        this.router.post('/create', this.create)
+        this.router.post(
+            '/create',
+            middleware.validateUserCreate,
+            this.create
+        )
     }
 
 }

@@ -129,3 +129,7 @@ proxy
 // datagrip3520meow - datagrip pasword]
 
 // what is version in docker compose file  - версия формата описания
+
+
+24.11.2022
+1. создать steps в readme

@@ -1,5 +1,5 @@
 import { UserEntity } from '../entities';
-import { ICreateUserBody } from '../models';
+import { IUserCreateBody } from '../models';
 import { UserRepository } from '../repositories';
 
 
@@ -10,12 +10,12 @@ class UserService {
         this.userRepository = userRepository
     }
 
-    create(user: ICreateUserBody): Promise<UserEntity> {
+    create(user: IUserCreateBody): Promise<UserEntity> {
         return this.userRepository.create(user)
     }
 
     getByEmail(email: string): Promise<UserEntity | null> {
-        return this.userRepository.findOne({ email })
+        return this.userRepository.findOne({ email }, { showPassword: true })
     }
 
     getById(id: number): Promise<UserEntity | null> {

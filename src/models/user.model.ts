@@ -1,4 +1,4 @@
-export interface ICreateUserBody {
+export interface IUserCreateBody {
     firstName: string,
     lastName: string,
     email: string,

@@ -13,4 +13,3 @@ class HttpResponseEntity {
 }
 
 export default HttpResponseEntity
-// new HttpResponse(data).send()

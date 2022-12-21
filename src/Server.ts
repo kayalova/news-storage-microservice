@@ -28,7 +28,7 @@ export default class Server {
     public async init() {
         this.app = express()
         this.app.use(express.json())
-        this.app.use(express.urlencoded({ extended: true })) // todo
+        this.app.use(express.urlencoded({ extended: true }))
 
         await this.runStorageClients()
 

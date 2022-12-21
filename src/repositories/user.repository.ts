@@ -1,6 +1,6 @@
 import { DataSource, FindOptionsWhere } from 'typeorm'
 import { RepositoryError, RoleEntity, UserEntity } from "../entities"
-import { ICreateUserBody } from '../models';
+import { IUserCreateBody } from '../models';
 
 class UserRepository {
     private userRepository;
@@ -11,13 +11,13 @@ class UserRepository {
         this.roleRepository = appDataSource.getRepository(RoleEntity)
     }
 
-    async create(user: ICreateUserBody): Promise<UserEntity> {
+    async create(user: IUserCreateBody): Promise<UserEntity> {
         try {
             const role = await this.roleRepository.findOneByOrFail({ name: user.role })
 
             const created = this.userRepository.create({ ...user, role })
 
-            return await this.userRepository.save(created) // todo: compare to news create?
+            return await this.userRepository.save(created) // todo: compare to news create
         } catch (error: any) {
 
             if (error?.driverError?.code === '23505') { //unique_violation 
@@ -34,9 +34,18 @@ class UserRepository {
         }
     }
 
-    async findOne(options: FindOptionsWhere<UserEntity>): Promise<UserEntity | null> {
+    async findOne(options: FindOptionsWhere<UserEntity>, meta?: { [k: string]: boolean }): Promise<UserEntity | null> {
         try {
-            return await this.userRepository.findOneBy(options)
+            return await this.userRepository.findOne({
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                    password: Boolean(meta?.showPassword)
+                },
+                where: options,
+            })
         } catch (error: any) {
             throw new RepositoryError({
                 location: 'UserRepository.findOne',

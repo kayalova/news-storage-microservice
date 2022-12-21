@@ -29,7 +29,7 @@ export interface IPagination {
     take?: number
 }
 
-export interface IGetNewsQuery {
+export interface INewsGetQuery {
     id?: number,
     header?: string,
     description?: string,

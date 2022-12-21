@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import { ValidationError } from 'express-validator'
 
 export function formatDateToClickhouse(date: string) {
     const msDelimeter = date.indexOf('.')
@@ -11,4 +12,14 @@ export async function hash(data: any) {
 
 export async function compareHashed(compared: any, hashed: any) {
     return bcrypt.compare(compared, hashed)
+}
+
+export function expressValidatorErrorToObject(errList: Array<ValidationError>): Object {
+    const errorMap: { [key: string]: string } = {}
+
+    for (const error of errList) {
+        errorMap[error.param] = error.msg
+    }
+
+    return errorMap
 }

@@ -1,11 +1,11 @@
-import { Router, Request, Response, NextFunction } from 'express'
-import { HttpResponseEntity, RepositoryError } from '../entities';
+import { Router, Request, Response } from 'express'
 
-import { checkUserLogin, logRequest } from '../middleware';
+import { HttpResponseEntity, RepositoryError } from '../entities';
+import * as middleware from '../middleware';
 import {
     UpdateBody,
     UpdateQuery,
-    IGetNewsQuery,
+    INewsGetQuery,
     INewsCreateBody,
     INewsFindOptions,
 } from '../models';
@@ -34,7 +34,7 @@ class NewsRouter {
                 email,
                 skip,
                 take
-            } = req.query as IGetNewsQuery
+            } = req.query as INewsGetQuery
 
             const filter: INewsFindOptions = {
                 id,
@@ -86,7 +86,6 @@ class NewsRouter {
             }))
 
         } catch (error) {
-
             if (error instanceof RepositoryError) {
                 res.status(500).send(new HttpResponseEntity({
                     error: true,
@@ -104,8 +103,6 @@ class NewsRouter {
 
     public create = async (req: Request, res: Response) => {
         try {
-            console.log(req.session)
-            console.log(req.sessionID)
             const { header, description, authorId } = req.body as INewsCreateBody
 
             const createdNews = await this.newsService.create({ author: authorId, header, description })
@@ -117,25 +114,22 @@ class NewsRouter {
 
             }))
         } catch (error) {
-
             if (error instanceof RepositoryError) {
                 res.status(500).send(new HttpResponseEntity({
                     error: true,
                     message: "Database error",
-                }))
+                }).getBody())
             }
 
             res.status(500).send(new HttpResponseEntity({
                 error: true,
                 message: "Unknown error",
-            }))
+            }).getBody())
         }
     }
 
     public update = async (req: Request, res: Response) => {
         try {
-            console.log(req.session)
-
             const { header, description, id } = req.body as UpdateQuery
 
             const news = await this.newsService.update(id, { header, description } as UpdateBody)
@@ -144,15 +138,13 @@ class NewsRouter {
                 error: false,
                 message: "Successfully updated",
                 data: news
-
             }))
         } catch (error) {
-
             if (error instanceof RepositoryError) {
                 res.status(500).send(new HttpResponseEntity({
                     error: true,
                     message: "Database error",
-                }))
+                }).getBody())
             }
 
             res.status(500).send(new HttpResponseEntity({
@@ -164,7 +156,7 @@ class NewsRouter {
 
     public delete = async (req: Request, res: Response) => {
         try {
-            console.log(req.session)
+
             const { id } = req.params
 
             await this.newsService.delete(Number(id))
@@ -172,44 +164,55 @@ class NewsRouter {
             res.status(200).send(new HttpResponseEntity({
                 error: false,
                 message: "Successfully deleted",
-
             }))
         } catch (error) {
             if (error instanceof RepositoryError) {
                 res.status(500).send(new HttpResponseEntity({
                     error: true,
-                    message: "Database error",
-                }))
+                    message: error.message,
+                }).getBody())
             }
 
             res.status(500).send(new HttpResponseEntity({
                 error: true,
                 message: "Unknown error",
-            }))
+            }).getBody())
         }
     }
 
     public middlewares() {
-        this.router.use(logRequest('News.router'))
-
-        // this.router.use(checkUserLogin, this.create)
-        // this.router.use(checkUserLogin, this.update)
-        // this.router.use(checkUserLogin, this.delete)
+        this.router.use(middleware.logRequest('News.router'))
     }
-
-    /* 
-    curl --header "Content-Type: application/jon" --request POST --data '{"header":"qq", "description":"meow","authorId":1}' http://localhost:3001/api/news/create
-
-    */
 
     public routes() {
-        this.router.post('/create', checkUserLogin, this.create)
-        this.router.get('/:id', this.getOne) //news vs /news/
-        this.router.get('/', this.get) // /news vs /news/
-        this.router.put('/update', checkUserLogin, this.update)
-        this.router.delete('/delete/:id', checkUserLogin, this.delete)
-    }
+        this.router.get('/', this.get)
 
+        this.router.get(
+            '/:id',
+            middleware.validateParamsId,
+            this.getOne
+        )
+
+        this.router.post(
+            '/create',
+            middleware.checkUserLogin,
+            middleware.validateNewsCreate,
+            this.create
+        )
+
+        this.router.put(
+            '/update',
+            middleware.checkUserLogin,
+            this.update
+        )
+
+        this.router.delete(
+            '/delete/:id',
+            middleware.checkUserLogin,
+            middleware.validateParamsId,
+            this.delete
+        )
+    }
 }
 
 

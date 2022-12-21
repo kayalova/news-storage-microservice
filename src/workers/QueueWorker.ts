@@ -22,7 +22,6 @@ export default class QueueWorker {
 
         } catch (error) {
             console.error(`Rabbitmq error: ${error}`)
-            process.exit(1) // todo: move
         }
     }
 
