@@ -74,3 +74,7 @@ export default class Server {
 }
 
 
+function change() {
+    const d = 10;
+    const a = 1000;
+}
