@@ -72,11 +72,3 @@ export default class Server {
         this.app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
     }
 }
-
-
-function change() {
-    const a = 1000;
-    const b = 10;
-    const c = 15;
-    const d = 20;
-}
